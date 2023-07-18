@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SockJS测试</title>
+</head>
+<body>
+    <div>
+        <div>
+            内容：<input type="text" id="msg">
+        </div>
+        <div>
+            <input type="button" value="发送" id="sd">
+        </div>
+        <div id="wd" style="width: 100%; height: 500px; background-color: antiquewhite;">
+        </div>
+    </div>
+</body>
+<script src="https://cdn.staticfile.org/sockjs-client/1.3.0/sockjs.min.js"></script>
+<script type="application/javascript" src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js"></script>
+<script type="application/javascript">
+    var sock = null;
+    $(function(){
+        console.log("init...");
+        init();
+        initListener();
+    });
+
+    function init() {
+        //var url = "http://localhost:8080/sockjs/text?token=1";
+        var url = "/sockjs/text?token=1";
+        // var sock = new SockJS(url);
+        sock = new SockJS(url);
+        sock.onopen = function() {
+            console.log("sockjs client open");
+            sock.send("Hello, I am a sockjs client: " + new Date());
+        };
+
+        sock.onmessage = function(event) {
+            console.log("sockjs client received message")
+            console.log(event.data)
+            //sock.close();
+            $("#wd").append("<p>" + event.data + "</p>");
+        };
+
+        sock.onclose = function() {
+            console.log("sockjs client closed");
+        }
+    }
+
+    function initListener() {
+        $("#sd").click(function () {
+            sendMsg();
+        });
+    }
+
+    // 发送消息
+    function sendMsg() {
+        var msg = $("#msg").val();
+        console.log(msg);
+        sock.send(msg);
+    }
+</script>
+</html>

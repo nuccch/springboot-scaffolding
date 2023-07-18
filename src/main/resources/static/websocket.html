@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket测试</title>
+</head>
+<body>
+    <div>
+        内容：<input type="text" id="content">
+    </div>
+    <div>
+        <input type="button" id="send" value="发送">
+    </div>
+    <div id="chatwindow" style="width: 100%; height: 500px; background-color: antiquewhite;">
+    </div>
+</body>
+<script type="application/javascript" src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js"></script>
+<script type="application/javascript">
+    var ws = null;
+
+    $(function(){
+        console.log("init...");
+        init();
+        initListener();
+    });
+
+    function init() {
+        //var ws = new WebSocket("ws://localhost:8080/websocket/text?token=1");
+        ws = new WebSocket("ws://localhost:8090/websocket/text?token=1");
+        //ws = new WebSocket("ws://192.168.3.243:8090/websocket/text?token=1");
+        // ws = new WebSocket("ws://192.168.3.243:8010/websocket/text?token=1");
+        ws.onopen = function(event) {
+            console.log(event);
+            console.log("websocket connection open.");
+            //ws.send("Hello, I am client, now: " + new Date());
+        };
+
+        ws.onmessage = function(event) {
+            console.log("websocket message received.")
+            console.log(event.data);
+            //ws.close();
+            var p = "<p>" + event.data + "</p>";
+            $("#chatwindow").append(p);
+        };
+        
+        ws.onclose = function (event) {
+            console.log(event.code);
+            console.log("websocket connection close.");
+        };
+
+        ws.onerror = function(event) {
+            console.log(event);
+            console.log("websocket connection error.");
+            console.log(event);
+        };
+    }
+
+    // 注册监听器
+    function initListener() {
+        $("#send").click(function () {
+            var msg = $("#content").val();
+            ws.send(msg);
+            console.log("send DONE.")
+        });
+    }
+</script>
+</html>

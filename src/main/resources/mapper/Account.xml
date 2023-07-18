@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 定义MyBatis接口映射器 -->
+<mapper namespace="org.chench.springboot.scaffolding.mapper.AccountXmlMapper">
+    <select id="getAccountList" resultType="org.chench.springboot.scaffolding.model.Account">
+        select id,name,email,ctime,mtime from account as ac limit #{start}, #{offset}
+    </select>
+</mapper>
